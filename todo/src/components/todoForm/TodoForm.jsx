@@ -1,37 +1,52 @@
-import React from 'react'
+import { useState } from 'react'
 import './TodoForm.css'
 
-const TodoForm = () => {
+const TodoForm = ({ addTodo }) => {
+  const [title, setTitle] = useState("")
+  const [content, setContent] = useState("")
+
+  const handleKeyPress = (e) =>{
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!title || !content) return;
+      console.log(title)
+      console.log(content)
+      addTodo(title, content);
+      setTitle("");
+      setContent("");
+    }
+  }
+
   return (
-    <div className='todo-form'>
-        <div className='header'>
-            <div className='input-title'>
-                <input type="text" placeholder='Título'/>
-            </div>
-            <div  className="checkbox-is-favorite">
+    <>
+      <div className='form'>
+        <div className='head-content'>
+          <div className='title'>
+            <input 
+            type="text" 
+            placeholder='Título'
+            value={title} 
+            onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div className="isFavorite">
                 <input type="checkbox" id="isFavorite"></input>
                 <label for="isFavorite"></label>
-            </div>
+          </div>
         </div>
-        <div className='content'>
-            <div className='input-content'>
-                <input placeholder='Clique ou arraste o arquivo para esta área para fazer o upload'/>
-            </div>
+        <div className='form-body'>
+          <div className='form-content'>
+            <input 
+            type="text" 
+            placeholder='Criar nota' 
+            value={content} 
+            onChange={(e) => setContent(e.target.value)}
+            onKeyDown={handleKeyPress}
+            />
+          </div>
         </div>
-        <div className='footer'>
-            <div className='footer-icons'>
-                <div className='write-icon'>
-                    <button>P</button>
-                </div>
-                <div className='color-select-icon'>
-                    <button>C</button>
-                </div>
-                <div className='delete'>
-                    <button>X</button>
-                </div>
-            </div>
-        </div>
-    </div>
+      </div>
+    </>
   )
 }
 

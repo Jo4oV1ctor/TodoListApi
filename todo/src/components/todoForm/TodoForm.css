@@ -1,68 +1,41 @@
-.todo-form{
-    background-color: aqua;
-    width: 300px;
-    border-radius: 15px;
+.form{
+    width: 500px;
+    height: 80px;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 10px;
 }
 
-.header{
+.head-content{
     display: flex;
+    padding-bottom: 5px;
     border-bottom: 1px solid #555;
 }
 
-.input-title{
-    padding: 5px;
+.title {
+    width: 92%;
 }
 
-.input-title input{
-    background-color: inherit;
+.title input{
     border: none;
 }
 
-.checkbox-is-favorite{
-    padding: 5px;
-    padding-left: 5.5em;
+.isFavorite{
 }
 
-.content{
-    height: 300px;
-    display: flex;
-    flex-direction: column;
+.form-body{
+    padding-top: 10px;
 }
 
-.input-content{
-    padding: 0.01px;
-    flex: 1;
-    display: flex;
-    background-color: inherit;
+.form-content{
+
 }
 
-.input-content input{
-    background-color: inherit;
-    flex: 1;
-    box-sizing: border-box;
+.form-content input{
     border: none;
 }
 
-.footer{
-    padding-top: 5px;
-    padding-bottom: 5px;
+.form-content input{
+    display: block;
     width: 100%;
-}
-
-.footer-icons{
-    margin-left: 10px;
-    display: flex;
-}
-
-.write-icon{
-    padding-right: 2.5px;
-}
-
-.color-select-icon{
-    padding-left: 2.5px;
-    padding-right: 2.5px;
-}
-
-.delete{
-    padding-left: 12em;
 }
