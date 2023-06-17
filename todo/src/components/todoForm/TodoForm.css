@@ -1,0 +1,68 @@
+.todo-form{
+    background-color: aqua;
+    width: 300px;
+    border-radius: 15px;
+}
+
+.header{
+    display: flex;
+    border-bottom: 1px solid #555;
+}
+
+.input-title{
+    padding: 5px;
+}
+
+.input-title input{
+    background-color: inherit;
+    border: none;
+}
+
+.checkbox-is-favorite{
+    padding: 5px;
+    padding-left: 5.5em;
+}
+
+.content{
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-content{
+    padding: 0.01px;
+    flex: 1;
+    display: flex;
+    background-color: inherit;
+}
+
+.input-content input{
+    background-color: inherit;
+    flex: 1;
+    box-sizing: border-box;
+    border: none;
+}
+
+.footer{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 100%;
+}
+
+.footer-icons{
+    margin-left: 10px;
+    display: flex;
+}
+
+.write-icon{
+    padding-right: 2.5px;
+}
+
+.color-select-icon{
+    padding-left: 2.5px;
+    padding-right: 2.5px;
+}
+
+.delete{
+    padding-left: 12em;
+}
