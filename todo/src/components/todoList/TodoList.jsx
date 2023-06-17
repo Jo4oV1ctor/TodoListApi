@@ -1,7 +1,7 @@
 import React from 'react'
 import './todoList.css'
 
-const TodoList = ({todo}) => {
+const TodoList = ({todo, removeTodo}) => {
   return (
     <div className='_todo-list'>
         <div className='header'>
@@ -27,7 +27,7 @@ const TodoList = ({todo}) => {
                     <button>C</button>
                 </div>
                 <div className='delete'>
-                    <button>X</button>
+                    <button onClick={() => removeTodo(todo.id)}>X</button>
                 </div>
             </div>
         </div>

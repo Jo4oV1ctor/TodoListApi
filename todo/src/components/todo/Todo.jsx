@@ -30,6 +30,12 @@ const Todo = () => {
         setTodos(newTodos)
     }
 
+    const removeTodo = (id) => {
+        const newTodos = [...todos]
+        const filteredTodos = newTodos.filter((todo) => todo.id !== id ? todo: null)
+        setTodos(filteredTodos)
+    }
+
   return (
     <div className='todo'>
         <div className='todo-form'>
@@ -38,7 +44,7 @@ const Todo = () => {
         <div className='todo-list'>
             <div className='list-content'>
                 {todos.map((todo) => (
-                    <TodoList key={todo.id} todo={todo}/>
+                    <TodoList key={todo.id} todo={todo} removeTodo={removeTodo}/>
                 ))}
                 
             </div>
