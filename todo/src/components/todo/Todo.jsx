@@ -20,12 +20,12 @@ const Todo = () => {
         }
     ])
 
-    const addTodo = (title, content) => {
+    const addTodo = (title, content, isFavorite) => {
         const newTodos = [...todos, {
             id: Math.floor (Math.random() * 1000),
             title,
             content,
-            isFavorite: false,
+            isFavorite
         }]
         setTodos(newTodos)
     }
@@ -36,17 +36,49 @@ const Todo = () => {
         setTodos(filteredTodos)
     }
 
+    const updateFavorite = (id, isFavorite) => {
+        const updatedTodos = todos.map((todo) => {
+          if (todo.id === id) {
+            return { ...todo, isFavorite };
+          }
+          return todo;
+        });
+        setTodos(updatedTodos);
+      };
+
   return (
     <div className='todo'>
         <div className='todo-form'>
             <TodoForm addTodo={addTodo}/>
         </div>
-        <div className='todo-list'>
-            <div className='list-content'>
-                {todos.map((todo) => (
-                    <TodoList key={todo.id} todo={todo} removeTodo={removeTodo}/>
+        {todos.some((todo) => todo.isFavorite) &&(
+            <div className='favorites'>
+            <h2>Favoritos</h2>
+            <div className="todo-list-favoritos">
+                {todos
+                .filter((todo) => todo.isFavorite)
+                .map((todo) => (
+                    <TodoList 
+                    key={todo.id} 
+                    todo={todo} 
+                    removeTodo={removeTodo} 
+                    updateFavorite={updateFavorite}/>
                 ))}
-                
+            </div>
+        </div>)}
+        <div className='todo-list-noFavorite'>
+            <h2>Não favoritos</h2>
+            <div className='list-content'>
+                {todos
+                .filter((todo) => !todo.isFavorite)
+                .map((todo) => (
+                    <TodoList 
+                    key={todo.id} 
+                    todo={todo} 
+                    removeTodo={removeTodo} 
+                    updateFavorite={updateFavorite}
+                    />
+                ))}
             </div>
         </div>
     </div>

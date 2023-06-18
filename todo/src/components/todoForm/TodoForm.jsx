@@ -1,21 +1,27 @@
 import { useState } from 'react'
 import './TodoForm.css'
 
-const TodoForm = ({ addTodo }) => {
+const TodoForm = ({addTodo}) => {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleCheckboxChange = (e) => {
+    setIsFavorite(e.target.checked);
+  }
 
   const handleKeyPress = (e) =>{
     if(e.key === 'Enter'){
       e.preventDefault();
       if(!title || !content) return;
-      console.log(title)
-      console.log(content)
-      addTodo(title, content);
+      addTodo(title, content, isFavorite);
       setTitle("");
       setContent("");
+      setIsFavorite(false);
     }
   }
+  
+
 
   return (
     <>
@@ -30,8 +36,11 @@ const TodoForm = ({ addTodo }) => {
             />
           </div>
           <div className="isFavorite">
-                <input type="checkbox" id="isFavorite"></input>
-                <label for="isFavorite"></label>
+                <input 
+                type='checkbox'
+                checked={isFavorite}
+                onChange={handleCheckboxChange}
+                />
           </div>
         </div>
         <div className='form-body'>
