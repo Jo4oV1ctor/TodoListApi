@@ -1,39 +1,53 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
 import TodoForm from '../todoForm/TodoForm'
 import TodoList from '../todoList/TodoList'
 import './Todo.css'
 
 const Todo = () => {
-    const [todos, setTodos] = useState([
-        {
-            id: 1,
-            title: "Titulo",
-            content: "Clique ou arraste o arquivo para esta área para fazer upload",
-            isFavorite: false,
-        },
-        {
-            id: 2,
-            title: "Titulo",
-            content: "Clique ou arraste o arquivo para esta área para fazer upload",
-            isFavorite: false,
-        }
-    ])
+    const [todos, setTodos] = useState([])
+    
+    const getData = () => {
+        const requestOptions = {
+            method: "GET",
+            redirect: "follow",
+        };
 
-    const addTodo = (title, content, isFavorite) => {
-        const newTodos = [...todos, {
-            id: Math.floor (Math.random() * 1000),
+        fetch("http://localhost:3030/todos", requestOptions)
+        .then((response) => response.json())
+        .then((result) => setTodos(result))
+        .catch((error) => console.error(error));
+    };
+
+    useEffect(() => {
+        getData();
+      }, []);
+
+    const addTodo = (title, content, isFavorite) => {      
+            const todo = {
+            id: 0,
             title,
             content,
             isFavorite
-        }]
-        setTodos(newTodos)
+        }
+        console.log(todo)
+        postTodo(todo)
     }
 
+    const postTodo = (todo) => {
+        fetch("http://localhost:3030/todos", {method:"POST", body:JSON.stringify(todo), headers: {"Content-type": "application/json; charset=UTF-8"}})
+        .then(() => getData())
+        .catch((error) => console.error(error));
+    };
+
     const removeTodo = (id) => {
-        const newTodos = [...todos]
-        const filteredTodos = newTodos.filter((todo) => todo.id !== id ? todo: null)
-        setTodos(filteredTodos)
+        deleteTodo(id)
+    }
+
+    const deleteTodo = (id) => {
+        fetch(`http://localhost:3030/todos/${id}`, {method:"DELETE"})
+        .then(() => getData())
+        .catch((error) => console.error(error));
     }
 
     const updateFavorite = (id, isFavorite) => {
@@ -43,8 +57,14 @@ const Todo = () => {
           }
           return todo;
         });
-        setTodos(updatedTodos);
+        updateTodo(id, updatedTodos[0]);
       };
+
+      const updateTodo = (id, todo) => {
+        fetch(`http://localhost:3030/todos/${id}`, {method:"PUT", body:JSON.stringify({...todo}), headers: {"Content-type": "application/json; charset=UTF-8"}})
+        .then(() => getData())
+        .catch((error) => console.error(error));
+      }
 
   return (
     <div className='todo'>
@@ -62,7 +82,9 @@ const Todo = () => {
                     key={todo.id} 
                     todo={todo} 
                     removeTodo={removeTodo} 
-                    updateFavorite={updateFavorite}/>
+                    updateFavorite={updateFavorite}
+                    updateTodo={updateTodo}
+                    />
                 ))}
             </div>
         </div>)}
@@ -77,6 +99,7 @@ const Todo = () => {
                     todo={todo} 
                     removeTodo={removeTodo} 
                     updateFavorite={updateFavorite}
+                    updateTodo={updateTodo}
                     />
                 ))}
             </div>

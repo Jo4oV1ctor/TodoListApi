@@ -6,6 +6,7 @@ const TodoForm = ({addTodo}) => {
   const [content, setContent] = useState("")
   const [isFavorite, setIsFavorite] = useState(false);
 
+  
   const handleCheckboxChange = (e) => {
     setIsFavorite(e.target.checked);
   }
