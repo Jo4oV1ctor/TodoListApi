@@ -2,8 +2,37 @@
     padding: 10px;
 }
 
+h2{
+    font: Arial;
+    margin-left: 20px;
+    font-size: medium;
+    color: rgb(64, 64, 64);
+}
+
 .todo-form{
     display: flex;
     justify-content: center;
 }
 
+.todo-list-favoritos{
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.list-content{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 580px) {
+    .todo-list-favoritos {
+      justify-content: center;
+    }
+}
+
+@media (max-width: 580px) {
+    .list-content {
+      justify-content: center;
+    }
+}

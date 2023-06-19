@@ -1,1 +1,6 @@
-
+body{
+    border: none;
+    background-color: aliceblue;
+    font: arial 12px;
+    color: rgb(17, 16, 16);
+}

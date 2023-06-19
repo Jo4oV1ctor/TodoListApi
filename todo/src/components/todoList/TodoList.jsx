@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './todoList.css'
+import { FaPencilAlt} from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
+import { GiPaintBucket } from 'react-icons/gi';
 
-const TodoList = ({todo, removeTodo, updateFavorite, updateTodo}) => {
-
-    const [selectedColor, setSelectedColor] = useState('');
-    const [backgroundColor, setBackgroundColor] = useState('');
+const TodoList = ({ todo, removeTodo, updateFavorite, updateTodo }) => {
+    const [selectedColor, setSelectedColor] = useState(todo.color || '');
+    const [backgroundColor, setBackgroundColor] = useState(todo.color || '');
     const [isEditMode, setIsEditMode] = useState(false);
     const [editedContent, setEditedContent] = useState(todo.content);
     const [isTitleEditMode, setIsTitleEditMode] = useState(false);
@@ -12,9 +14,17 @@ const TodoList = ({todo, removeTodo, updateFavorite, updateTodo}) => {
     const [dragging, setDragging] = useState(false);
     const [droppedImage, setDroppedImage] = useState(null);
 
+  
+    useEffect(() => {
+      if (todo.color) {
+          setSelectedColor(todo.color);
+          setBackgroundColor(todo.color);
+      }
+    }, [todo.color]);
+
     const handleCheckboxChange = () => {
-        updateFavorite(todo.id, !todo.isFavorite);
-      };
+      updateFavorite(todo.id, !todo.isFavorite, selectedColor);
+    };
 
     const handleEditClick = () => {
         setIsEditMode(true);
@@ -47,45 +57,45 @@ const TodoList = ({todo, removeTodo, updateFavorite, updateTodo}) => {
       }
     };
     
-      const handleContentChange = (e) => {
-        setEditedContent(e.target.value);
-      };
-    
-      const handleTitleChange = (e) => {
-        setEditedTitle(e.target.value);
-      };
+    const handleContentChange = (e) => {
+      setEditedContent(e.target.value);
+    };
+  
+    const handleTitleChange = (e) => {
+      setEditedTitle(e.target.value);
+    };
 
-      const handleDragOver = (e) => {
-        e.preventDefault();
-        setDragging(true);
+    const handleDragOver = (e) => {
+      e.preventDefault();
+      setDragging(true);
+    };
+  
+    const handleDragEnter = (e) => {
+      e.preventDefault();
+      setDragging(true);
+    };
+  
+    const handleDragLeave = () => {
+      setDragging(false);
+    };
+  
+    const handleDrop = (e) => {
+      e.preventDefault();
+      setDragging(false);
+      const file = e.dataTransfer.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        setDroppedImage(reader.result);
       };
-    
-      const handleDragEnter = (e) => {
-        e.preventDefault();
-        setDragging(true);
-      };
-    
-      const handleDragLeave = () => {
-        setDragging(false);
-      };
-    
-      const handleDrop = (e) => {
-        e.preventDefault();
-        setDragging(false);
-        const file = e.dataTransfer.files[0];
-        const reader = new FileReader();
-        reader.onload = () => {
-          setDroppedImage(reader.result);
-        };
-        reader.readAsDataURL(file);
-      };
+      reader.readAsDataURL(file);
+    };
       
-
     const handleColorChange = (e) => {
         const color = e.target.value;
         setSelectedColor(color);
         setBackgroundColor(color);
-      };
+        updateFavorite(todo.id, todo.isFavorite, color);
+    };
 
   return (
     <div 
@@ -95,73 +105,80 @@ const TodoList = ({todo, removeTodo, updateFavorite, updateTodo}) => {
     onDragEnter={handleDragEnter}
     onDragLeave={handleDragLeave}
     onDrop={handleDrop}>
-        <div className='header'>
-            <div className='input-title'>
-              {isTitleEditMode ? (
-                <input
-                  type="text"
-                  value={editedTitle}
-                  onChange={handleTitleChange}
-                  onKeyDown={handleTitleSaveClick}
-                  placeholder={todo.title}
-                />
+      <div className='header'>
+        <div className='input-title'>
+          {isTitleEditMode ? (
+            <input
+            type="text"
+            value={editedTitle}
+            onChange={handleTitleChange}
+            onKeyDown={handleTitleSaveClick}
+            placeholder={todo.title}
+            />
               ) : (
-                <h2 onClick={handleTitleEditClick}>{todo.title}</h2>
+                <h3 onClick={handleTitleEditClick}>{todo.title}</h3>
+            )
+          }
+        </div>
+        <div className="checkbox-is-favorite">
+          <input
+          type="checkbox"
+          checked={todo.isFavorite}
+          onChange={handleCheckboxChange}
+          />
+        </div>
+      </div>
+      <div className='content' onClick={handleEditClick} onKeyDown={handleSaveClick}>
+          <div className='input-content'>
+          {isEditMode ? (
+              <div>
+                  <textarea 
+                  value={editedContent}
+                  onChange={handleContentChange}
+                  placeholder={todo.content}
+                  />
+              </div>
+              ) : (
+              <div className='text-content'>
+                  <div className='dropped-image-wrapper'>
+                  {droppedImage && <img src={droppedImage} alt='Imagem' />}
+                  </div>
+                  <div className='content-text'>{todo.content}</div>
+              </div>
               )}
-            </div>
-            <div className="checkbox-is-favorite">
-              <input
-                type="checkbox"
-                checked={todo.isFavorite}
-                onChange={handleCheckboxChange}
-              />
-            </div>
           </div>
-        <div className='content' onClick={handleEditClick} onKeyDown={handleSaveClick}>
-            <div className='input-content'>
-            {isEditMode ? (
-                <div>
-                    <input
-                    value={editedContent}
-                    onChange={handleContentChange}
-                    placeholder={todo.content}
-                    />
-                </div>
-                ) : (
-                <div className='text-content'>
-                    <div className='dropped-image-wrapper'>
-                    {droppedImage && <img src={droppedImage} alt='Imagem' />}
-                    </div>
-                    <div className='content-text'>{todo.content}</div>
-                </div>
-                )}
-            </div>
         </div>
-        <div className='footer'>
-            <div className='footer-icons'>
-                <div className='write-icon'>
-                {isEditMode ? (
-              <>
-                
-              </>
+    <div className='footer'>
+      <div className='footer-icons'>
+        <div className='write-icon'>
+          {isEditMode ? (
+            <>
+              
+            </>
             ) : (
-              <button onClick={handleEditClick}>P</button>
+              <button onClick={handleEditClick}><FaPencilAlt /></button>
             )}
-                </div>
-                <div className='color-select-icon'>
-                    <select value={selectedColor} onChange={handleColorChange}>
-                        <option value="">C</option>
-                        <option value='red' style={{ backgroundColor: 'red' }}></option>
-                        <option value='blue' style={{ backgroundColor: 'blue' }}></option>
-                        <option value='green' style={{ backgroundColor: 'green' }}></option>
-                    </select>
-                </div>
-                <div className='delete'>
-                    <button onClick={() => removeTodo(todo.id)}>X</button>
-                </div>
-            </div>
         </div>
+      <div className='color-select-icon'>
+        <span>
+          <GiPaintBucket />
+        </span>
+        <select value={selectedColor} onChange={handleColorChange}>
+          <option value=""></option>
+          <option value="#f4c284" style={{ backgroundColor: "#f4c284" }}></option>
+          <option value="#fefda6" style={{ backgroundColor: "#fefda6" }}></option>
+          <option value='#96fdfd' style={{ backgroundColor: '#96fdfd' }}></option>
+          <option value='#ccfd9b' style={{ backgroundColor: '#ccfd9b' }}></option>
+          <option value='#fd96c9' style={{ backgroundColor: '#fd96c9' }}></option>
+          <option value='#9696fd' style={{ backgroundColor: '#9696fd' }}></option>
+        </select>
+          </div>
+            <div className='delete'>
+              <button onClick={() => removeTodo(todo.id)}><FaTimes /></button>
+          </div>
+      </div>
     </div>
+  </div>
   )
 }
 

@@ -5,6 +5,7 @@ import TodoList from '../todoList/TodoList'
 import './Todo.css'
 
 const Todo = () => {
+    
     const [todos, setTodos] = useState([])
     
     const getData = () => {
@@ -21,14 +22,15 @@ const Todo = () => {
 
     useEffect(() => {
         getData();
-      }, []);
+    }, []);
 
-    const addTodo = (title, content, isFavorite) => {      
-            const todo = {
+    const addTodo = (title, content, isFavorite, color) => {      
+        const todo = {
             id: 0,
             title,
             content,
-            isFavorite
+            isFavorite,
+            color: "#FFFAF0"
         }
         console.log(todo)
         postTodo(todo)
@@ -50,62 +52,61 @@ const Todo = () => {
         .catch((error) => console.error(error));
     }
 
-    const updateFavorite = (id, isFavorite) => {
-        const updatedTodos = todos.map((todo) => {
-          if (todo.id === id) {
-            return { ...todo, isFavorite };
-          }
-          return todo;
-        });
-        updateTodo(id, updatedTodos[0]);
-      };
+    const updateFavorite = (id, isFavorite, color) => {
+        const updatedTodo = todos.find((todo) => todo.id === id);
+        if (updatedTodo) {
+            updatedTodo.isFavorite = isFavorite;
+            updatedTodo.color = color;
+            updateTodo(id, updatedTodo);
+        }
+    };
 
-      const updateTodo = (id, todo) => {
-        fetch(`http://localhost:3030/todos/${id}`, {method:"PUT", body:JSON.stringify({...todo}), headers: {"Content-type": "application/json; charset=UTF-8"}})
+    const updateTodo = (id, todo) => {
+        fetch(`http://localhost:3030/todos/${id}`, {method:"PUT", body:JSON.stringify(todo), headers: {"Content-type": "application/json; charset=UTF-8"}})
         .then(() => getData())
         .catch((error) => console.error(error));
-      }
+    }
 
-  return (
-    <div className='todo'>
-        <div className='todo-form'>
-            <TodoForm addTodo={addTodo}/>
-        </div>
-        {todos.some((todo) => todo.isFavorite) &&(
+    return (
+        <div className='todo'>
+            <div className='todo-form'>
+                <TodoForm addTodo={addTodo}/>
+            </div>
+            {todos.some((todo) => todo.isFavorite) &&(
             <div className='favorites'>
-            <h2>Favoritos</h2>
-            <div className="todo-list-favoritos">
-                {todos
-                .filter((todo) => todo.isFavorite)
-                .map((todo) => (
-                    <TodoList 
-                    key={todo.id} 
-                    todo={todo} 
-                    removeTodo={removeTodo} 
-                    updateFavorite={updateFavorite}
-                    updateTodo={updateTodo}
-                    />
-                ))}
-            </div>
-        </div>)}
-        <div className='todo-list-noFavorite'>
-            <h2>Não favoritos</h2>
-            <div className='list-content'>
-                {todos
-                .filter((todo) => !todo.isFavorite)
-                .map((todo) => (
-                    <TodoList 
-                    key={todo.id} 
-                    todo={todo} 
-                    removeTodo={removeTodo} 
-                    updateFavorite={updateFavorite}
-                    updateTodo={updateTodo}
-                    />
-                ))}
+                <h2>Favoritos</h2>
+                <div className="todo-list-favoritos">
+                    {todos
+                    .filter((todo) => todo.isFavorite)
+                    .map((todo) => (
+                        <TodoList 
+                        key={todo.id} 
+                        todo={todo} 
+                        removeTodo={removeTodo} 
+                        updateFavorite={updateFavorite}
+                        updateTodo={updateTodo}
+                        />
+                    ))}
+                </div>
+            </div>)}
+            <div className='todo-list-noFavorite'>
+                <h2>Não favoritos</h2>
+                <div className='list-content'>
+                    {todos
+                    .filter((todo) => !todo.isFavorite)
+                    .map((todo) => (
+                        <TodoList 
+                        key={todo.id} 
+                        todo={todo} 
+                        removeTodo={removeTodo} 
+                        updateFavorite={updateFavorite}
+                        updateTodo={updateTodo}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default Todo
